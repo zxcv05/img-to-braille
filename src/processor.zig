@@ -62,10 +62,10 @@ pub fn process(alloc: std.mem.Allocator, ctx: Context) !BrailleImage {
                 get_pixel_bit(ctx, image, offset_y + 0, offset_x + 0) << 0 |
                 get_pixel_bit(ctx, image, offset_y + 1, offset_x + 0) << 1 |
                 get_pixel_bit(ctx, image, offset_y + 2, offset_x + 0) << 2 |
-                get_pixel_bit(ctx, image, offset_y + 3, offset_x + 0) << 3 |
-                get_pixel_bit(ctx, image, offset_y + 0, offset_x + 1) << 4 |
-                get_pixel_bit(ctx, image, offset_y + 1, offset_x + 1) << 5 |
-                get_pixel_bit(ctx, image, offset_y + 2, offset_x + 1) << 6 |
+                get_pixel_bit(ctx, image, offset_y + 3, offset_x + 0) << 6 |
+                get_pixel_bit(ctx, image, offset_y + 0, offset_x + 1) << 3 |
+                get_pixel_bit(ctx, image, offset_y + 1, offset_x + 1) << 4 |
+                get_pixel_bit(ctx, image, offset_y + 2, offset_x + 1) << 5 |
                 get_pixel_bit(ctx, image, offset_y + 3, offset_x + 1) << 7;
 
             output[y * output_width + x] = constants.BRAILLE_BLANK + braille_char_offset;
