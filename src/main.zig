@@ -24,13 +24,11 @@ pub fn main() !void {
     const utf8_string = try output.to_utf8(alloc);
     defer alloc.free(utf8_string);
 
-    switch (ctx.output_mode) {
-        .Stdout => {
-            const stdout = std.io.getStdOut();
-            try stdout.writeAll(utf8_string);
-        },
-        .Clipboard => {
-            std.log.err("TODO: Clipboard output mode", .{});
-        },
-    }
+    const out_file = if (ctx.out_file_path) |out_file_path|
+        try std.fs.cwd().createFile(out_file_path, .{})
+    else
+        std.io.getStdOut();
+
+    try out_file.writeAll(utf8_string);
+    out_file.close();
 }

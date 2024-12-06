@@ -32,15 +32,7 @@ pub fn parse_cli(alloc: std.mem.Allocator, ctx: *Context) !bool {
         }
         // --output -o
         else if (std.mem.eql(u8, arg, "--output") or std.mem.eql(u8, arg, "-o")) {
-            const next_arg = args.next() orelse return error.NoOutputModeGiven;
-
-            if (std.mem.eql(u8, next_arg, "stdout")) {
-                ctx.output_mode = .Stdout;
-            } else if (std.mem.eql(u8, next_arg, "clipboard")) {
-                ctx.output_mode = .Clipboard;
-            } else {
-                return error.OutputModeNotRecognized;
-            }
+            ctx.out_file_path = args.next() orelse return error.NoOutputPathGiven;
         }
         // --threshold -t
         else if (std.mem.eql(u8, arg, "--threshold") or std.mem.eql(u8, arg, "-t")) {

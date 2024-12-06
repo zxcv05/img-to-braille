@@ -3,10 +3,8 @@ pub const HELP_USAGE_FMT =
     \\
     \\  <file_path>     | Path to input image
     \\  --help, -h      | Show this help text
-    \\  --output, -o    | Output mode
-    \\                  |  possible values:
-    \\                  |  "stdout", "clipboard" (default: stdout)
-    \\ --threshold, -t  | Threshold for displaying a pixel
+    \\  --output, -o    | Output file path (default: stdout)
+    \\  --threshold, -t | Threshold for displaying a pixel
     \\                  |  possible values: 0..255 (default: 127)
     \\
 ;

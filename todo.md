@@ -1,3 +1,2 @@
-- Functionality: Clipboard support
 - Functionality: Support emitting colored output (stdout only)
 - CLI: Add flag for colored output
