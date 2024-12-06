@@ -18,7 +18,12 @@ pub fn main() !void {
     const can_continue = try cli.parse_cli(alloc, &ctx);
     if (!can_continue) return;
 
-    const output = try processor.process(alloc, ctx);
+    var image = try zimg.ImageUnmanaged.fromFilePath(alloc, ctx.in_file_path.?);
+    defer image.deinit(alloc);
+
+    if (image.isAnimation()) return error.AnimatedImagesNotSupported;
+
+    const output = try processor.process(alloc, ctx, &image);
     defer alloc.free(output.data);
 
     const utf8_string = try output.to_utf8(alloc);

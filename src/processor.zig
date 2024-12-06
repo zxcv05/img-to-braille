@@ -14,39 +14,31 @@ pub const BrailleImage = struct {
         const max_possible_size = this.width * this.height * 4;
         var buffer = try alloc.alloc(u8, max_possible_size);
 
-        var fba = std.heap.FixedBufferAllocator.init(buffer[0..]);
-        var fba_alloc = fba.allocator();
+        var head: usize = 0;
 
         for (0..this.height) |y| {
             const offset = y * this.width;
             var utf16 = std.unicode.Utf16LeIterator.init(this.data[offset .. offset + this.width]);
 
             while (try utf16.nextCodepoint()) |codepoint| {
-                var slice = fba_alloc.alloc(u8, 4) catch unreachable;
-                const len = try std.unicode.utf8Encode(codepoint, slice[0..4]);
-
-                _ = fba_alloc.realloc(slice, len) catch unreachable;
+                head += try std.unicode.utf8Encode(codepoint, buffer[head..]);
             }
 
-            const newline = fba_alloc.create(u8) catch unreachable;
-            newline.* = '\n';
+            buffer[head] = '\n';
+            head += 1;
         }
 
-        return try alloc.realloc(buffer, fba.end_index);
+        return try alloc.realloc(buffer, head);
     }
 };
 
-inline fn get_pixel_bit(ctx: Context, image: zimg.ImageUnmanaged, y: usize, x: usize) u8 {
+inline fn get_pixel_bit(ctx: Context, image: *zimg.ImageUnmanaged, y: usize, x: usize) u8 {
     if (x >= image.width) return 0;
     if (y >= image.height) return 0;
     return @intFromBool(image.pixels.grayscale8[y * image.width + x].value > ctx.pixel_threshold);
 }
 
-pub fn process(alloc: std.mem.Allocator, ctx: Context) !BrailleImage {
-    var image = try zimg.ImageUnmanaged.fromFilePath(alloc, ctx.in_file_path.?);
-    defer image.deinit(alloc);
-
-    if (image.isAnimation()) return error.AnimatedImagesNotSupported;
+pub fn process(alloc: std.mem.Allocator, ctx: Context, image: *zimg.ImageUnmanaged) !BrailleImage {
     try image.convert(alloc, .grayscale8);
 
     const output_width = @divFloor(image.width + 1, 2);
