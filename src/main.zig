@@ -24,9 +24,15 @@ pub fn main() !void {
     if (image.isAnimation()) return error.AnimatedImagesNotSupported;
 
     const output = try processor.process(alloc, ctx, &image);
-    defer alloc.free(output.data);
+    defer switch (output) {
+        .default => |d| alloc.free(d.data),
+        .colored => |c| alloc.free(c.data),
+    };
 
-    const utf8_string = try output.to_utf8(alloc);
+    const utf8_string = switch (output) {
+        .default => |d| try d.to_utf8(alloc),
+        .colored => |c| try c.to_utf8(alloc),
+    };
     defer alloc.free(utf8_string);
 
     const out_file = if (ctx.out_file_path) |out_file_path|

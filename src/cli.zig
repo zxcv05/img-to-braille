@@ -39,6 +39,14 @@ pub fn parse_cli(alloc: std.mem.Allocator, ctx: *Context) !bool {
             const next_arg = args.next() orelse return error.NoThresholdValueGiven;
             ctx.pixel_threshold = try std.fmt.parseInt(u8, next_arg, 10);
         }
+        // --color -c
+        else if (std.mem.eql(u8, arg, "--color") or std.mem.eql(u8, arg, "-c")) {
+            ctx.colored_output = true;
+        }
+        // --no-color -g
+        else if (std.mem.eql(u8, arg, "--no-color") or std.mem.eql(u8, arg, "-g")) {
+            ctx.colored_output = false;
+        }
         // Not recognized
         else {
             return error.ArgumentNotRecognized;

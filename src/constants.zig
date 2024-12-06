@@ -5,7 +5,9 @@ pub const HELP_USAGE_FMT =
     \\  --help, -h      | Show this help text
     \\  --output, -o    | Output file path (default: stdout)
     \\  --threshold, -t | Threshold for displaying a pixel
-    \\                  |  possible values: 0..255 (default: 127)
+    \\                  |   possible values: 0..255 (default: 127)
+    \\  --color, -c     | Enable colored output (--threshold will be ignored)
+    \\  --no-color, -g  | Disable colored output (default)
     \\
 ;
 
